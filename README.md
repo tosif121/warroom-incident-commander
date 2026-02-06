@@ -201,7 +201,7 @@ data-guard/
 │   │   ├── page.tsx              # Main Dashboard
 │   │   ├── actions.ts            # Server Actions
 │   │   └── api/                  # API Routes
-│   ├── components/warroom/       # Generative Widgets
+│   ├── components/               # Generative Widgets
 │   │   ├── ErrorGraph.tsx
 │   │   ├── LogStream.tsx
 │   │   ├── IncidentTimeline.tsx
