@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Flame, RefreshCw, Github, FileCode, GitPullRequest, History, ExternalLink, Trash2 } from 'lucide-react';
+import { Footer } from '@/components/Footer';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
@@ -270,20 +271,7 @@ export default function CodeCritic() {
         </motion.div>
       </main>
 
-      <footer className="py-6 text-center text-sm text-muted-foreground">
-        <p>
-          Built for{' '}
-          <a
-            href="https://www.wemakedevs.org/hackathons/tambo"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-medium text-foreground hover:underline underline-offset-4"
-          >
-            Tambo Hackathon 2026
-          </a>{' '}
-          • The UI Strikes Back 🏆
-        </p>
-      </footer>
+      <Footer />
     </div>
   );
 }
