@@ -55,7 +55,7 @@ export async function getIncidents() {
       services ( name )
     `,
     )
-    .order('started_at', { ascending: false });
+    .order('created_at', { ascending: false });
 
   if (error) {
     console.error('Error fetching incidents:', JSON.stringify(error, null, 2));
@@ -65,6 +65,7 @@ export async function getIncidents() {
   return data.map((d: any) => ({
     ...d,
     service_name: d.services?.name || 'Unknown Service',
+    started_at: d.created_at, // Map created_at to started_at for frontend compatibility
   })) as (Incident & { service_name: string })[];
 }
 
