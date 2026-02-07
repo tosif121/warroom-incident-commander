@@ -17,10 +17,10 @@ export function GenericRoast({ title, roast, explanation, severity, config }: Ge
   const emoji = config?.emoji || '🤡';
 
   const severityColors = {
-    critical: 'border-red-500 bg-red-950/20 text-red-400',
-    high: 'border-orange-500 bg-orange-950/20 text-orange-400',
-    medium: 'border-yellow-500 bg-yellow-950/20 text-yellow-400',
-    low: 'border-green-500 bg-green-950/20 text-green-400',
+    critical: 'border-red-500 bg-red-100 text-red-900 dark:bg-red-950/30 dark:text-red-400',
+    high: 'border-orange-500 bg-orange-100 text-orange-900 dark:bg-orange-950/30 dark:text-orange-400',
+    medium: 'border-yellow-500 bg-yellow-100 text-yellow-900 dark:bg-yellow-950/30 dark:text-yellow-400',
+    low: 'border-green-500 bg-green-100 text-green-900 dark:bg-green-950/30 dark:text-green-400',
   };
 
   const colorClass = severityColors[severity as keyof typeof severityColors] || severityColors.medium;
@@ -39,7 +39,9 @@ export function GenericRoast({ title, roast, explanation, severity, config }: Ge
 
           <p className="text-md font-medium italic opacity-100">"{roast}"</p>
 
-          <p className="text-xs opacity-70 leading-relaxed pt-2 border-t border-white/10">{explanation}</p>
+          <p className="text-xs opacity-70 leading-relaxed pt-2 border-t border-black/10 dark:border-white/10">
+            {explanation}
+          </p>
         </div>
       </div>
     </motion.div>

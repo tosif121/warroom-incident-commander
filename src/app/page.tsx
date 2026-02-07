@@ -1,161 +1,266 @@
 'use client';
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Flame, Send, RefreshCw, Layers } from 'lucide-react';
-import { SecurityBomb } from '@/components/roast/SecurityBomb';
-import { SpaghettiMeter } from '@/components/roast/SpaghettiMeter';
-import { PerformanceTurtle } from '@/components/roast/PerformanceTurtle';
-import { GenericRoast } from '@/components/roast/GenericRoast';
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Flame, RefreshCw, Github, FileCode, GitPullRequest, History, ExternalLink, Trash2 } from 'lucide-react';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
+
+type InputMode = 'code' | 'github_file' | 'github_pr' | 'history';
+
+interface RoastHistory {
+  id: string;
+  date: string;
+  type: string;
+  summary: string;
+  total_score?: number;
+}
 
 export default function CodeCritic() {
-  const [code, setCode] = useState('');
+  const router = useRouter();
+  const [mode, setMode] = useState<InputMode>('code');
+  const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
-  const [issues, setIssues] = useState<any[]>([]);
   const [roastLevel, setRoastLevel] = useState('medium');
+  const [history, setHistory] = useState<RoastHistory[]>([]);
+
+  useEffect(() => {
+    const stored = localStorage.getItem('roast_history');
+    if (stored) {
+      setHistory(JSON.parse(stored));
+    }
+  }, []);
+
+  const saveToHistory = (session_id: string, type: string, summary: string) => {
+    const newItem: RoastHistory = {
+      id: session_id,
+      date: new Date().toLocaleDateString(),
+      type,
+      summary: summary.substring(0, 50) + (summary.length > 50 ? '...' : ''),
+    };
+    const updated = [newItem, ...history].slice(0, 10); // Keep last 10
+    setHistory(updated);
+    localStorage.setItem('roast_history', JSON.stringify(updated));
+  };
+
+  const clearHistory = () => {
+    setHistory([]);
+    localStorage.removeItem('roast_history');
+    toast.success('History cleared');
+  };
+
+  const getPlaceholder = () => {
+    if (mode === 'github_file') return 'https://github.com/username/repo/blob/main/file.js';
+    if (mode === 'github_pr') return 'https://github.com/username/repo/pull/123';
+    return '// Paste your questionable code here...';
+  };
 
   const handleRoast = async () => {
-    if (!code.trim()) return;
+    if (!content.trim()) return;
     setLoading(true);
-    setIssues([]); // Clear previous
 
     try {
+      const payload: any = {
+        input_type: mode,
+        roastLevel,
+      };
+
+      if (mode === 'code') {
+        payload.code = content;
+      } else {
+        payload.github_url = content;
+      }
+
       const res = await fetch('/api/roast', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          code,
-          language: 'javascript', // Detect later
-          roastLevel,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
-      if (data.success) {
-        setIssues(data.issues);
+
+      if (data.success && data.session_id) {
+        saveToHistory(data.session_id, mode, mode === 'code' ? 'Code Snippet' : content);
+        toast.success('Roast initiated! Redirecting...');
+        router.push(`/review/${data.session_id}`);
       } else {
-        alert(data.error);
+        toast.error(data.error || 'Failed to start roast session');
+        setLoading(false);
       }
     } catch (error) {
       console.error(error);
-      alert('Failed to roast. The AI might be too stunned by your code.');
-    } finally {
+      toast.error('Failed to connect to Roast API.');
       setLoading(false);
     }
   };
 
-  const renderWidget = (issue: any, index: number) => {
-    const props = {
-      key: index,
-      title: issue.title,
-      roast: issue.roast,
-      explanation: issue.explanation,
-      severity: issue.severity,
-      config: issue.widget_config,
-    };
-
-    switch (issue.widget_type) {
-      case 'SecurityBomb':
-        return <SecurityBomb {...props} />;
-      case 'SpaghettiMeter':
-        return <SpaghettiMeter {...props} />;
-      case 'PerformanceTurtle':
-        return <PerformanceTurtle {...props} />;
-      default:
-        return <GenericRoast {...props} />;
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-neutral-950 text-white selection:bg-red-500/30">
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       {/* Header */}
-      <header className="border-b border-white/10 bg-black/50 backdrop-blur-md sticky top-0 z-50">
+      <header className="border-b border-border bg-background/50 backdrop-blur-md sticky top-0 z-50">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="bg-red-600 p-2 rounded-lg">
+            <div className="bg-red-600 p-2 rounded-lg shadow-lg shadow-red-500/20">
               <Flame className="w-5 h-5 text-white" />
             </div>
             <h1 className="text-xl font-bold tracking-tight">Code Critic</h1>
           </div>
-          <div className="flex gap-2">
-            {['gentle', 'medium', 'savage'].map((level) => (
-              <button
-                key={level}
-                onClick={() => setRoastLevel(level)}
-                className={`px-3 py-1 rounded-full text-xs font-medium transition-all uppercase ${
-                  roastLevel === level ? 'bg-white text-black' : 'bg-white/10 text-white/50 hover:bg-white/20'
-                }`}
-              >
-                {level}
-              </button>
-            ))}
+          <div className="flex gap-4 items-center">
+            <div className="flex gap-2 p-1 bg-muted/50 rounded-full border border-border">
+              {['gentle', 'medium', 'savage'].map((level) => (
+                <button
+                  key={level}
+                  onClick={() => setRoastLevel(level)}
+                  className={`px-3 py-1 rounded-full text-xs font-medium transition-all uppercase ${
+                    roastLevel === level
+                      ? 'bg-foreground text-background font-bold shadow-md'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  {level}
+                </button>
+              ))}
+            </div>
+            <ThemeToggle />
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8 grid lg:grid-cols-2 gap-8 h-[calc(100vh-64px)] overflow-hidden">
-        {/* LEFT: Input Area */}
-        <div className="flex flex-col gap-4 h-full">
-          <div className="flex-1 relative group">
-            <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 via-transparent to-purple-500/10 rounded-2xl opacity-50 group-hover:opacity-100 transition-opacity pointer-events-none" />
-            <textarea
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              placeholder="// Paste your questionable code here..."
-              className="w-full h-full bg-black/40 border border-white/10 rounded-2xl p-6 font-mono text-sm text-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500/50 resize-none transition-all placeholder:text-gray-700"
-              spellCheck={false}
-            />
+      <main className="container mx-auto px-4 py-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-3xl mx-auto flex flex-col gap-6"
+        >
+          <div className="text-center space-y-4 mb-8">
+            <h2 className="text-4xl md:text-6xl font-black tracking-tight bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
+              Roast My Code.
+            </h2>
+            <p className="text-xl text-muted-foreground font-medium max-w-xl mx-auto">
+              Get a 2-minute AI audit that finds security risks, spaghetti code, and emotional damage.
+            </p>
           </div>
 
-          <button
-            onClick={handleRoast}
-            disabled={loading || !code.trim()}
-            className="w-full bg-white text-black font-bold py-4 rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2 text-lg shadow-[0_0_20px_-5px_rgba(255,255,255,0.3)]"
-          >
-            {loading ? (
-              <>
-                <RefreshCw className="w-5 h-5 animate-spin" />
-                Analyzing Complexity...
-              </>
-            ) : (
-              <>
-                <Flame className="w-5 h-5 text-red-600" />
-                ROAST MY CODE
-              </>
-            )}
-          </button>
-        </div>
+          {/* Input Mode Tabs */}
+          <div className="flex justify-center gap-4 mb-4 flex-wrap">
+            <button
+              onClick={() => setMode('code')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full font-medium transition-all ${mode === 'code' ? 'bg-foreground text-background shadow-lg' : 'bg-muted text-muted-foreground hover:bg-muted/80'}`}
+            >
+              <FileCode className="w-4 h-4" /> Snippet
+            </button>
+            <button
+              onClick={() => setMode('github_file')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full font-medium transition-all ${mode === 'github_file' ? 'bg-foreground text-background shadow-lg' : 'bg-muted text-muted-foreground hover:bg-muted/80'}`}
+            >
+              <Github className="w-4 h-4" /> GitHub File
+            </button>
+            <button
+              onClick={() => setMode('github_pr')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full font-medium transition-all ${mode === 'github_pr' ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30' : 'bg-muted text-muted-foreground hover:bg-muted/80'}`}
+            >
+              <GitPullRequest className="w-4 h-4" /> Pull Request
+            </button>
+            <button
+              onClick={() => setMode('history')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full font-medium transition-all ${mode === 'history' ? 'bg-orange-600 text-white shadow-lg shadow-orange-500/30' : 'bg-muted text-muted-foreground hover:bg-muted/80'}`}
+            >
+              <History className="w-4 h-4" /> History
+            </button>
+          </div>
 
-        {/* RIGHT: Output Area (Generative UI) */}
-        <div className="relative h-full overflow-y-auto pr-2 pb-20 no-scrollbar">
-          <h2 className="text-sm font-semibold text-gray-500 mb-4 flex items-center gap-2 sticky top-0 bg-neutral-950/80 backdrop-blur-xl py-2 z-10">
-            <Layers className="w-4 h-4" />
-            GENERATIVE CRITIQUE
-          </h2>
+          <div className="relative group">
+            <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 to-purple-500/10 blur-xl opacity-50 group-hover:opacity-100 transition-opacity" />
 
-          <div className="space-y-6">
-            <AnimatePresence mode="popLayout">
-              {issues.length > 0
-                ? issues.map((issue, index) => (
-                    <motion.div
-                      key={index}
-                      layout
-                      initial={{ opacity: 0, y: 50 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
+            {mode === 'history' ? (
+              <div className="relative w-full min-h-[300px] bg-card/80 backdrop-blur-sm border border-input rounded-2xl p-6 shadow-2xl space-y-4">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-bold">Recent Roasts</h3>
+                  {history.length > 0 && (
+                    <button
+                      onClick={clearHistory}
+                      className="text-xs text-red-500 hover:underline flex items-center gap-1"
                     >
-                      {renderWidget(issue, index)}
-                    </motion.div>
-                  ))
-                : !loading && (
-                    <div className="flex flex-col items-center justify-center h-[500px] text-gray-600 border-2 border-dashed border-white/5 rounded-2xl">
-                      <div className="text-4xl mb-4 grayscale opacity-20">🎭</div>
-                      <p>Paste code to trigger the Generative UI engine.</p>
-                    </div>
+                      <Trash2 className="w-3 h-3" /> Clear History
+                    </button>
                   )}
-            </AnimatePresence>
+                </div>
+                {history.length === 0 ? (
+                  <div className="text-center text-muted-foreground py-12">
+                    <History className="w-12 h-12 mx-auto mb-4 opacity-20" />
+                    <p>No history yet. Get roasting!</p>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {history.map((item) => (
+                      <div
+                        key={item.id}
+                        className="flex items-center justify-between p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors border border-transparent hover:border-border"
+                      >
+                        <div className="flex flex-col">
+                          <span className="text-sm font-medium flex items-center gap-2">
+                            {item.type === 'github_pr' ? (
+                              <GitPullRequest className="w-3 h-3 text-purple-500" />
+                            ) : item.type === 'github_file' ? (
+                              <Github className="w-3 h-3" />
+                            ) : (
+                              <FileCode className="w-3 h-3" />
+                            )}
+                            {item.summary}
+                          </span>
+                          <span className="text-xs text-muted-foreground">{item.date}</span>
+                        </div>
+                        <button
+                          onClick={() => router.push(`/review/${item.id}`)}
+                          className="p-2 bg-background rounded-full hover:scale-110 transition-transform shadow-sm"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : mode === 'code' ? (
+              <textarea
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder={getPlaceholder()}
+                className="relative w-full h-[300px] bg-card/80 backdrop-blur-sm border border-input rounded-2xl p-6 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-ring resize-none shadow-2xl"
+                spellCheck={false}
+              />
+            ) : (
+              <input
+                type="text"
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder={getPlaceholder()}
+                className="relative w-full h-16 bg-card/80 backdrop-blur-sm border border-input rounded-2xl px-6 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-ring shadow-2xl"
+              />
+            )}
           </div>
-        </div>
+
+          {mode !== 'history' && (
+            <button
+              onClick={handleRoast}
+              disabled={loading || !content.trim()}
+              className="w-full bg-foreground text-background font-bold py-4 rounded-xl text-lg shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2 group"
+            >
+              {loading ? (
+                <>
+                  <RefreshCw className="w-5 h-5 animate-spin" />
+                  Starting Analysis...
+                </>
+              ) : (
+                <>
+                  <Flame className="w-5 h-5 text-red-600 transition-transform group-hover:scale-110" />
+                  {mode === 'github_pr' ? 'ROAST THIS PR' : 'AUDIT MY CODE'}
+                </>
+              )}
+            </button>
+          )}
+        </motion.div>
       </main>
     </div>
   );

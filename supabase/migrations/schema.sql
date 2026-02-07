@@ -1,41 +1,42 @@
--- CODE CRITIC: PRODUCTION SCHEMA 🚀
--- "The UI Strikes Back" Fresh Start
+-- WARNING: This schema is for context only and is not meant to be run.
+-- Table order and constraints may not be valid for execution.
 
--- 1. CLEAN SLATE
--- This will wipe any existing Code Critic tables to ensure a clean install.
-DROP PUBLICATION IF EXISTS supabase_realtime;
-DROP TABLE IF EXISTS code_issues CASCADE;
-DROP TABLE IF EXISTS code_reviews CASCADE;
-
--- 2. REVIEWS (The Roast Session)
-CREATE TABLE code_reviews (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
-  repo_url TEXT,
-  code_snippet TEXT NOT NULL,
-  language TEXT DEFAULT 'javascript',
-  roast_level TEXT DEFAULT 'medium', -- gentle, medium, savage
-  status TEXT DEFAULT 'analyzing' -- analyzing, complete
+CREATE TABLE public.code_reviews (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  created_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
+  updated_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
+  session_id text NOT NULL UNIQUE,
+  repo_url text,
+  github_url text,
+  code_snippet text NOT NULL,
+  language text DEFAULT 'javascript'::text,
+  roast_level text DEFAULT 'medium'::text CHECK (roast_level = ANY (ARRAY['gentle'::text, 'medium'::text, 'savage'::text])),
+  status text DEFAULT 'analyzing'::text CHECK (status = ANY (ARRAY['analyzing'::text, 'complete'::text, 'failed'::text])),
+  overall_score integer CHECK (overall_score >= 0 AND overall_score <= 100),
+  security_score integer CHECK (security_score >= 0 AND security_score <= 100),
+  performance_score integer CHECK (performance_score >= 0 AND performance_score <= 100),
+  maintainability_score integer CHECK (maintainability_score >= 0 AND maintainability_score <= 100),
+  badge text CHECK (badge = ANY (ARRAY['🏆 Code Master'::text, '💪 Getting There'::text, '🔥 Needs Work'::text, '💀 Please Refactor'::text])),
+  total_issues integer DEFAULT 0,
+  critical_issues integer DEFAULT 0,
+  CONSTRAINT code_reviews_pkey PRIMARY KEY (id)
 );
 
--- 3. ISSUES (The Critique & Generative Widgets)
-CREATE TABLE code_issues (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  review_id UUID REFERENCES code_reviews(id) ON DELETE CASCADE,
-  issue_type TEXT, -- security, performance, style, logic
-  severity TEXT, -- critical, high, medium, low
-  title TEXT,
-  roast TEXT, -- The funny critique
-  explanation TEXT, -- Serious explanation
-  code_snippet TEXT, -- Specific line/block
-  suggested_fix TEXT,
-  widget_type TEXT, -- SecurityBomb, SpaghettiMeter, PerformanceTurtle
-  widget_config JSONB DEFAULT '{}'::jsonb, -- Config for the Generative Widget
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+CREATE TABLE public.code_issues (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  review_id uuid NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
+  issue_type text NOT NULL CHECK (issue_type = ANY (ARRAY['security'::text, 'performance'::text, 'complexity'::text, 'logic'::text, 'style'::text])),
+  severity text NOT NULL CHECK (severity = ANY (ARRAY['critical'::text, 'high'::text, 'medium'::text, 'low'::text])),
+  title text NOT NULL,
+  roast text NOT NULL,
+  explanation text NOT NULL,
+  line_number integer,
+  problematic_code text,
+  suggested_fix text,
+  widget_type text NOT NULL DEFAULT 'GenericRoast'::text CHECK (widget_type = ANY (ARRAY['SecurityBomb'::text, 'SpaghettiMeter'::text, 'PerformanceTurtle'::text, 'GenericRoast'::text])),
+  widget_config jsonb NOT NULL DEFAULT '{}'::jsonb,
+  impact_score integer DEFAULT 0 CHECK (impact_score >= 0 AND impact_score <= 100),
+  CONSTRAINT code_issues_pkey PRIMARY KEY (id),
+  CONSTRAINT code_issues_review_id_fkey FOREIGN KEY (review_id) REFERENCES public.code_reviews(id)
 );
-
--- 4. ENABLE REALTIME (Multiplayer Magic)
-ALTER TABLE code_reviews REPLICA IDENTITY FULL;
-ALTER TABLE code_issues REPLICA IDENTITY FULL;
-
-CREATE PUBLICATION supabase_realtime FOR TABLE code_reviews, code_issues;
