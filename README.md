@@ -1,107 +1,67 @@
-# 🚨 Data Guard: The AI Incident Commander
+# 🔥 Code Critic: The UI Strikes Back
 
-> **"When production is burning, don't search for dashboards. Data Guard builds them for you, in real-time."**
+> **"Pull requests are boring. Code reviews are tedious. What if your UI fought back against bad code with personality?"**
 
 [![Demo Video](https://img.youtube.com/vi/YOUR_ID/0.jpg)](https://youtu.be/YOUR_ID)  
-**Live Demo:** [dataguard.vercel.app](https://dataguard.vercel.app)
+**Live Demo:** [code-critic.vercel.app](https://code-critic.vercel.app)
 
 ---
 
 ## 🏆 Tambo Hackathon 2026: "The UI Strikes Back"
 
-**Data Guard** is the world's first incident management system with **Generative UI**. Instead of static dashboards, the interface adapts in real-time based on what's breaking.
+**Code Critic** is a "Roast-as-a-Service" platform that uses **Generative UI** to brutally (or gently) critique your code.
+
+Instead of a boring list of lint errors, the interface **literally explodes** with custom widgets based on what's wrong with your code.
 
 **Built with:**
 
-- 🤖 Tambo AI (natural language incident detection)
-- ⚡ Supabase Realtime (multiplayer sync)
-- 🎨 Generative UI (dynamic component rendering)
-- 🩺 The Query Doctor (Autonomous DBA)
-- 📊 Data Explorer (Text-to-SQL + Viz)
+- 🤖 **Tambo AI** (The Critic)
+- 🧠 **Perplexity API** (The Brain)
+- 🎨 **Generative UI** (The Visuals)
+- ⚡ **Supabase Realtime** (Multiplayer Roasting)
 
 ---
 
-## 🎯 What Makes Data Guard Different?
+## 🎯 What It Does
 
-| Traditional Tools           | Data Guard                            |
-| --------------------------- | ------------------------------------- |
-| Static dashboards           | **Generative UI** adapts per incident |
-| English-only                | **Multi-language** (Hindi/Hinglish)   |
-| 30-day setup (agents, SDKs) | **30-second** connection              |
-| Manual triage               | **AI auto-detects** and categorizes   |
-| "Run SQL" manually          | **Autonomous DBA** & Data Explorer    |
-
-**TL;DR:** Not another monitoring tool. An AI-powered incident commander that adapts to YOU.
+1.  **Paste Code:** Any language (JS, Python, Rust, etc.)
+2.  **Select Roast Level:**
+    - 🥺 **Gentle:** Constructive feedback.
+    - 😐 **Medium:** Witty sarcasm (Default).
+    - 🔥 **Savage:** Emotional damage.
+3.  **Generative UI Explodes:**
+    - 💣 **Security Risk?** A glowing red "Security Bomb" appears.
+    - 🍝 **Bad Logic?** The "Spaghetti Meter" goes off the charts.
+    - 🐢 **Slow Code?** The "Performance Turtle" crawls across the screen.
 
 ---
 
-## 🌟 Key Features
+## 🌟 Key Features (The "Strikes Back" Tech)
 
-### 1. ⚡ Zero-Config Database Monitoring
+### 1. 💣 Generative Widgets
 
-**No agents. No sidecars. Just credentials.**
+The UI isn't static. It _reacts_ to your code's specific problems.
 
-```
-1. Paste Supabase URL + API Key
-2. AI scans your schema
-3. Select tables to monitor
-4. Start monitoring (< 30 seconds)
-```
+| Issue Type          | Generated Widget    | Description                                          |
+| :------------------ | :------------------ | :--------------------------------------------------- |
+| **Critical Vuln**   | `SecurityBomb`      | An animated red bomb that pulses based on severity.  |
+| **Complexity**      | `SpaghettiMeter`    | A specialized gauge that measures "Mama Mia" levels. |
+| **O(n²) Loop**      | `PerformanceTurtle` | An animated turtle racing a blur (rabbit).           |
+| **Everything Else** | `GenericRoast`      | A dynamic card with custom emojis and roast text.    |
 
-**What it monitors:**
-Failed transactions, Error logs, Slow queries (>1s), Data anomalies.
+### 2. 🧠 The Roast Engine
 
-### 2. 🧠 AI-Powered Incident Detection
+Powered by **Perplexity `sonar-pro`**, Code Critic doesn't just find bugs—it understands _context_.
 
-**Multi-language natural language processing:**
+> **Code:** `const password = "admin123";`
+> **Roast:** "Congratulations! You've just built a security system that can be hacked by a golden retriever."
 
-```
-English: "Payment API is failing"
-Hindi: "Payment service band ho gayi"
-Hinglish: "Yaar checkout phat gayi hai"
-```
+### 3. ⚡ Multiplayer Roasting
 
-**What happens:**
+Built on **Supabase Realtime**.
 
-1. Tambo AI analyzes intent
-2. Perplexity categorizes incident type (e.g., Database, API, Traffic)
-3. Creates incident in database & **Generates custom UI**
-
-### 3. 🎨 Generative UI (The Magic!)
-
-**Different problems = Different dashboards**
-
-| Incident Type   | Generated Widgets                             |
-| --------------- | --------------------------------------------- |
-| Payment Failure | ErrorGraph + PaymentLogs + RollbackButton     |
-| Slow Queries    | LatencyGraph + QueryAnalyzer + OptimizeButton |
-| Traffic Spike   | TrafficGraph + AutoScaler + LoadBalancer      |
-
-**Powered by `ui_config` JSONB:** The dashboard layout is generated by AI on the fly.
-
-### 4. 🩺 The Query Doctor (Autonomous DBA)
-
-**"Database is slow" is not an insight.**
-
-- **Detects:** Queries running > 1s.
-- **Analyzes:** AI explains _why_ it's slow (e.g., "Full Table Scan on `orders`").
-- **Fixes:** One-click `CREATE INDEX` execution via `applySocket`.
-
-### 5. 📊 Data Explorer (Generative UI)
-
-A **ChatGPT-like interface** for your database.
-
-> "Show me failed orders from last week grouped by error type"
-
-**Result:** Generates the SQL, executes it securely, and renders a **Bar Chart** or **Area Graph** automatically.
-
-### 6. 🔄 Real-Time Collaboration & Slack
-
-**Multiplayer incident response:**
-
-- All team members see the same dashboard (Supabase Realtime).
-- Actions sync across sessions.
-- **Slack Integration:** Receive alerts and updates in your channels.
+- Share a link to your Roast Session.
+- Watch your team react as the UI roasts your PR live.
 
 ---
 
@@ -109,21 +69,28 @@ A **ChatGPT-like interface** for your database.
 
 ```mermaid
 graph TD
-    User[User Chat] -->|Natural Language| Tambo[Tambo AI]
-    Tambo -->|Analyze Intent| Perplexity[Perplexity API]
-    Perplexity -->|Create Incident| DB[(Supabase)]
+    User[User Input] -->|Code Snippet| NextJS[Next.js Backend]
 
-    DB -->|Realtime Sync| Clients[All Users]
-    Clients -->|Render| UI[Generative UI]
+    subgraph "The Roast Engine"
+    NextJS -->|Analyze + Roast| Perplexity[Perplexity API]
+    Perplexity -->|JSON Response| NextJS
+    end
 
-    ExternalDB[(User's Database)] -->|Monitor| Poller[Live Poller]
-    Poller -->|Metrics| DB
+    NextJS -->|Save Result| Supabase[(Supabase DB)]
 
-    UI -->|Ask Data| Explore[Data Explorer]
-    Explore -->|Text-to-SQL| ExternalDB
+    subgraph "Generative UI"
+    Supabase -->|Realtime Sync| Client[React Frontend]
+    Client -->|Map Issue Type| Widgets[Custom Widgets]
+    Widgets -->|Render| Bomb[Security Bomb 💣]
+    Widgets -->|Render| Spaghetti[Spaghetti Meter 🍝]
+    end
 ```
 
-**Stack:** Next.js 16, Supabase, Perplexity, Recharts, Framer Motion.
+**Stack Refined:**
+
+- **Frontend:** Next.js 16, Framer Motion, Lucide Icons.
+- **Backend:** Next.js API Routes, Perplexity API.
+- **Database:** Supabase (Postgres + Realtime).
 
 ---
 
@@ -132,21 +99,20 @@ graph TD
 ### Prerequisites
 
 - Node.js 18+
-- [Supabase](https://supabase.com) project
+- Supabase Project
+- Perplexity API Key
 
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/tosif121/data-guard.git
-cd data-guard
+git clone https://github.com/tosif121/code-critic.git
+cd code-critic
 npm install
 ```
 
 ### 2. Setup Database
 
-1. Go to Supabase SQL Editor
-2. Run `supabase/migrations/schema.sql`
-3. Enable Realtime for: `services`, `incidents`, `metrics`, `error_logs`
+Run `supabase/migrations/schema.sql` in your Supabase SQL Editor.
 
 ### 3. Configure Environment
 
@@ -154,38 +120,39 @@ npm install
 # .env.local
 NEXT_PUBLIC_SUPABASE_URL=your_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
-NEXT_PUBLIC_TAMBO_API_KEY=your_tambo_key
 PERPLEXITY_API_KEY=your_perplexity_key
-SLACK_WEBHOOK_URL=your_slack_webhook
 ```
 
 ---
 
-## � Demo Scenarios
+## 🟢 Demo Scenarios
 
-### 1. The Red Alert (API Failure)
+### Scenario 1: The "Bob Builder" (Security Risk)
 
-**Context:** Payment API outage.
+**Input:** `db.query("SELECT * FROM users WHERE id = " + id)`
+**Result:**
 
-> "The Payment API is throwing 500 errors everywhere!"
-> **Result:** Status turns **CRITICAL**. Shows `ErrorGraph` and "Rollback" button.
+- **Widget:** `SecurityBomb` (Critical)
+- **Roast:** "This SQL injection vulnerability is so wide open, I could drive a truck through it alongside your entire database."
 
-### 2. The Desi Developer (Hinglish)
+### Scenario 2: The "Yolo Loop" (Performance)
 
-**Context:** Multilingual AI understanding.
+**Input:** Nested loops iterating over 100k items.
+**Result:**
 
-> "Yaar pura database phat gaya hai, queries atak rahi hain"
-> **Result:** AI detects "Database Latency". Query Doctor suggests an index.
+- **Widget:** `PerformanceTurtle` (Slow)
+- **Roast:** "This code is slower than a dial-up connection in 1999. O(n^2)? more like O(no)."
 
-### 3. The Data Story (Analysis)
+### Scenario 3: The "Italian Chef" (Complexity)
 
-**Context:** Post-incident review.
+**Input:** A 200-line function with 15 if-else statements.
+**Result:**
 
-> "Show me the failure rate compared to last hour"
-> **Result:** Data Explorer generates a comparative Area Chart.
+- **Widget:** `SpaghettiMeter` (95%)
+- **Roast:** "I've seen bowls of pasta with better structure than this logic."
 
 ---
 
-> **"From zero to monitoring in 30 seconds. From incident to resolution in 3 minutes."**
+> **"Code reviews shouldn't be boring. Let the UI strike back."**
 >
-> Built with ❤️ by [@tosif121](https://github.com/tosif121) for Tambo Hackathon 2026
+> Built with ❤️ (and sass) by [@tosif121](https://github.com/tosif121) for Tambo Hackathon 2026
