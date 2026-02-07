@@ -6,7 +6,7 @@ interface FixSuggestionProps {
   steps: string[];
 }
 
-export default function FixSuggestion({ title, steps }: FixSuggestionProps) {
+export default function FixSuggestion({ title, steps = [] }: FixSuggestionProps) {
   return (
     <div className="w-full bg-indigo-900/20 rounded-xl border border-indigo-500/30 overflow-hidden my-4">
       <div className="bg-indigo-900/40 px-4 py-3 flex items-center gap-2 border-b border-indigo-500/30">

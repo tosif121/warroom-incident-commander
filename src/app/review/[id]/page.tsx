@@ -174,22 +174,24 @@ If the user asks "How do I fix this?", pick the most critical issue and use the 
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground py-8 relative">
-      <header className="container mx-auto px-4 mb-8 flex justify-between items-center">
-        <Link href="/" className="flex items-center gap-2 font-bold text-xl hover:opacity-80 transition-opacity">
-          <Flame className="w-6 h-6 text-red-600" />
-          Code Critic
-        </Link>
-        <div className="flex gap-2">
-          <button
-            onClick={() => {
-              navigator.clipboard.writeText(window.location.href);
-              toast.success('Link copied to clipboard!');
-            }}
-            className="flex items-center gap-2 px-4 py-2 bg-muted rounded-full text-sm font-medium hover:bg-muted/80 transition-colors"
-          >
-            <Share2 className="w-4 h-4" /> Share
-          </button>
+    <div className="min-h-screen bg-background text-foreground relative">
+      <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-background/80 backdrop-blur-md px-4 py-4 mb-8">
+        <div className="container mx-auto flex justify-between items-center">
+          <Link href="/" className="flex items-center gap-2 font-bold text-xl hover:opacity-80 transition-opacity">
+            <Flame className="w-6 h-6 text-red-600" />
+            Code Critic
+          </Link>
+          <div className="flex gap-2">
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(window.location.href);
+                toast.success('Link copied to clipboard!');
+              }}
+              className="flex items-center gap-2 px-4 py-2 bg-muted rounded-full text-sm font-medium hover:bg-muted/80 transition-colors"
+            >
+              <Share2 className="w-4 h-4" /> Share
+            </button>
+          </div>
         </div>
       </header>
 
