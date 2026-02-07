@@ -181,121 +181,28 @@ NEXT_PUBLIC_SUPABASE_URL=your_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 NEXT_PUBLIC_TAMBO_API_KEY=your_tambo_key
 PERPLEXITY_API_KEY=your_perplexity_key
-```
-
-### 4. Run
-
-```bash
-npm run dev
-# Open http://localhost:3000
+SLACK_WEBHOOK_URL=your_slack_webhook # Optional: For seamless alerts
 ```
 
 ---
 
-## 📂 Project Structure
+## 🌟 Key Features (New!)
 
-```
-data-guard/
-├── src/
-│   ├── app/
-│   │   ├── page.tsx              # Main Dashboard
-│   │   ├── actions.ts            # Server Actions
-│   │   └── api/                  # API Routes
-│   ├── components/               # Generative Widgets
-│   │   ├── ErrorGraph.tsx
-│   │   ├── LogStream.tsx
-│   │   ├── IncidentTimeline.tsx
-│   │   ├── SchemaVisualizer.tsx  # Onboarding
-│   │   └── ActionButton.tsx
-│   ├── lib/
-│   │   ├── hooks/
-│   │   │   └── useLiveMonitor.ts # Custom Poller
-│   │   ├── api.ts                # Axios Wrapper
-│   │   ├── incident-analyzer.ts  # Perplexity AI
-│   │   └── incident-detector.ts  # Incident Logic
-├── supabase/
-│   └── migrations/
-│       └── schema.sql             # Database Schema
-└── public/
-    └── screenshots/               # Demo Images
-```
+### 5. 💬 Real Slack Integration
 
----
+Keep your team in the loop without leaving the dashboard.
 
-## 🛠️ Troubleshooting
+- **Instant Alerts:** Post updates directly to `#incidents`, `#general`, or custom channels.
+- **Smart Context:** Messages include current status, severity, and service name.
+- **Zero-Config:** Just add your Webhook URL.
 
-**Realtime not working?**
+### 6. 🕹️ Global Polling Controls
 
-- Go to Supabase → Database → Replication
-- Enable realtime for: `incidents`, `metrics`, `error_logs`
+Take control of your data flow.
 
-**Schema detection fails?**
-
-- Verify anon key has `SELECT` permissions
-- Check if tables are in `public` schema
-
-**AI not responding?**
-
-- Verify `PERPLEXITY_API_KEY` in `.env.local`
-- Check API quota limits
-
----
-
-## 📸 Screenshots
-
-### Healthy State
-
-![Healthy Dashboard](./public/screenshot-healthy.png)
-
-### Alert Mode
-
-![Alert Dashboard](./public/screenshot-alert.png)
-
-### Schema Visualizer
-
-![Schema Detection](./public/screenshot-schema.png)
-
-### Multi-Language
-
-![Hindi Support](./public/screenshot-hindi.png)
-
----
-
-## 🙏 Acknowledgments
-
-Built for **Tambo Hackathon 2026** with:
-
-- Tambo AI - Natural language incident detection
-- Supabase - Realtime database & auth
-- Perplexity - AI analysis engine
-- Next.js 16 - Full-stack framework
-
----
-
-## 📝 License
-
-MIT License - Build whatever you want with this!
-
----
-
-## 🔗 Links
-
-- **Live Demo:** [dataguard.vercel.app](https://dataguard.vercel.app)
-- **Demo Video:** [YouTube](https://youtu.be/YOUR_ID)
-- **GitHub:** [github.com/tosif121/data-guard](https://github.com/tosif121/data-guard)
-- **Tambo Submission:** [Link]
-
----
-
-## 🎭 Official Demo Scenarios (Step-by-Step)
-
-Use these scenarios to test the system or record your demo video.
-
-### 🎮 How to Execute
-
-1.  **Open the App**: Go to `http://localhost:3000`.
-2.  **Locate Chat**: Find the main chat input bar at the bottom.
-3.  **Type & Enter**: Copy the **"Type this"** text below.
+- **Pause/Resume:** Freeze the dashboard state instantly (perfect for demos!).
+- **Adjust Interval:** Poll every 2s, 5s, or 30s.
+- **Universal Sync:** Controls affect Supabase fetches, Live API checks, and Realtime subscriptions simultaneously.
 
 ---
 

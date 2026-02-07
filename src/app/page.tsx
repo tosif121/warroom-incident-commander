@@ -103,10 +103,14 @@ export default function DataGuardDashboard() {
     };
 
     fetchState();
-    // Poll for updates (quick hack for hackathon demo speed)
-    const interval = setInterval(fetchState, 2000);
+    fetchState();
+
+    if (isPollingPaused) return;
+
+    // Poll for updates (respecting header controls)
+    const interval = setInterval(fetchState, pollingInterval);
     return () => clearInterval(interval);
-  }, []);
+  }, [isPollingPaused, pollingInterval]);
 
   // Helper to map DB incident to UI Analysis object
   const mapDbToAnalysis = (dbIncident: any): IncidentAnalysis => {
